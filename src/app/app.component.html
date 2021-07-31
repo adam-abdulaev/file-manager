@@ -3,7 +3,8 @@
     File Manager
   </h1>
 </header>
+
 <main>
-  <app-file-manager [directories]="directories">
+  <app-file-manager [treeItems]="(fileManagerService.directoryTree$ | async) || []">
   </app-file-manager>
 </main>

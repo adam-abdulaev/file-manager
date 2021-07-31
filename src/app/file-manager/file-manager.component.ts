@@ -1,63 +1,30 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FileManagerService } from '../core/services/file-manager.service';
-import { DirectoryInterface } from '../core/models/directory.interface';
-import { animate, transition, trigger } from '@angular/animations';
+import { IDirectoryTreeItem, TreeItemTypes } from '../core/models/directory.interface';
+import {animate, group, state, style, transition, trigger} from '@angular/animations';
 
 @Component({
   selector: 'app-file-manager',
   templateUrl: './file-manager.component.html',
   styleUrls: ['./file-manager.component.scss'],
-  animations: [
-    trigger('fadeAnimation', [
-      transition(':enter', [ animate('300ms')]),
-      transition(':leave', [ animate('300ms')]),
-    ]),
-  ],
 })
 export class FileManagerComponent {
-  @Input() directories!: any;
+  @Input() treeItems: IDirectoryTreeItem[] = [];
 
-  rotateArrow = false;
+  treeItemType = TreeItemTypes;
 
-  loadingDirectory = false;
 
-  directoryTitle!: string;
+  constructor(private fileManagerService: FileManagerService) {}
 
-  directoryId = 0;
-
-  constructor(private fileManagerService: FileManagerService) {
-  }
-
-  openDirectory(directory: any): void {
-    this.directoryTitle = directory.title;
-    this.directoryId = directory.id;
-
-    this.directories = this.directories.map((item: any) => {
-      if (item.id === directory.id) {
-        return { ...item, isOpen: !item?.isOpen };
+  openDirectory(directory: IDirectoryTreeItem): void {
+    if (directory.isOpen) {
+      directory.isOpen = false;
+    } else {
+      if (directory.children.length) {
+        directory.isOpen = true;
+      } else {
+        this.fileManagerService.getDirectory(directory);
       }
-      return item;
-    });
-
-    const isFolder = directory.hasOwnProperty('children');
-
-    if (isFolder && directory?.children.length === 0) {
-
-      this.loadingDirectory = true;
-      this.fileManagerService
-        .fetchDirectories(directory.id)
-
-        .subscribe((newDirectory: DirectoryInterface) => {
-          this.directories = this.directories.map((item: any) => {
-            if (item.id === directory.id) {
-              return { ...newDirectory, isOpen: true };
-            }
-            return item;
-          });
-          this.loadingDirectory = false;
-        });
     }
-
-
   }
 }

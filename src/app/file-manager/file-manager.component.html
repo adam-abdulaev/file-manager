@@ -1,31 +1,31 @@
-<ng-container *ngFor="let directory of directories">
-  <ul>
-    <li>
-      <div class="directory" [@fadeAnimation]="directory?.length">
-        <mat-icon
-          *ngIf="!loadingDirectory"
-          mat-list-icon
-          class="icon"
-          [ngClass]="{ hideArrow: !directory?.children}"
-          (click)="openDirectory(directory)"
-          >{{ rotateArrow ? 'arrow_drop_down' : 'arrow_right' }}
-        </mat-icon>
-        <mat-spinner *ngIf="loadingDirectory && directory.id === directoryId" diameter="24" class="loading-spinner"></mat-spinner>
-        <mat-icon *ngIf="directory.title.includes('.zip')" mat-list-icon class="icon">
-          archive
-        </mat-icon>
-        <mat-icon *ngIf="directory.title.includes('.epub')" mat-list-icon class="icon">
-          article
-        </mat-icon>
-        <mat-icon *ngIf="directory.title.includes('.jpg')" mat-list-icon class="icon">
-          image
-        </mat-icon>
-        <mat-icon *ngIf="directory?.children" mat-list-icon class="icon"> folder </mat-icon>
-        <div mat-line>{{ directory.title }}</div>
+<ul class="tree-item-wrapper">
+  <li *ngFor="let treeItem of treeItems">
+    <div class="tree-item">
+      <div class="icon-wrapper">
+        <ng-container *ngIf="treeItem.type === treeItemType.Directory">
+          <ng-container *ngIf="treeItem.isLoading; else expandIcon">
+            <mat-spinner diameter="16" class="loading-spinner"></mat-spinner>
+          </ng-container>
+
+          <ng-template #expandIcon>
+            <mat-icon (click)="openDirectory(treeItem)" mat-list-icon class="icon">
+              {{ treeItem.isOpen ? 'arrow_drop_down' : 'arrow_right' }}
+            </mat-icon>
+          </ng-template>
+        </ng-container>
       </div>
-      <app-file-manager *ngIf="directory.hasOwnProperty('children') && directory?.isOpen"
-                          [directories]="directory?.children">
-      </app-file-manager>
-    </li>
-  </ul>
-</ng-container>
+
+      <mat-icon mat-list-icon class="icon">
+        {{ treeItem.icon }}
+      </mat-icon>
+
+      <div mat-line>
+        {{ treeItem.title }}
+      </div>
+    </div>
+
+    <ng-container *ngIf="treeItem.type === treeItemType.Directory && treeItem?.isOpen">
+      <app-file-manager [treeItems]="treeItem.children"></app-file-manager>
+    </ng-container>
+  </li>
+</ul>

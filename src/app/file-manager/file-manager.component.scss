@@ -1,13 +1,9 @@
-.switcher {
-  transition: transform .3s;
-}
-
-ul {
+.tree-item-wrapper {
   list-style-type: none;
   padding: 5px 10px;
   margin: 0;
 
-  .directory {
+  .tree-item {
     display: flex;
     align-items: center;
   }
@@ -18,21 +14,23 @@ ul {
   margin-right: 5px;
   transform: rotate(0);
   transition: transform 1s linear;
+  cursor: pointer;
 
 
   &.hideArrow {
     visibility: hidden;
   }
+
   &.rotate {
     transform: rotate(90deg);
     transition: transform 1s linear;
   }
 }
 
-.wrapper {
-  transition: transform 1s;
+.icon-wrapper {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
 }
 
-.fade {
-  opacity: 0;
-}
