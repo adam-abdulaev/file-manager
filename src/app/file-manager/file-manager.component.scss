@@ -1,0 +1,38 @@
+.switcher {
+  transition: transform .3s;
+}
+
+ul {
+  list-style-type: none;
+  padding: 5px 10px;
+  margin: 0;
+
+  .directory {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.icon {
+  color: #262626;
+  margin-right: 5px;
+  transform: rotate(0);
+  transition: transform 1s linear;
+
+
+  &.hideArrow {
+    visibility: hidden;
+  }
+  &.rotate {
+    transform: rotate(90deg);
+    transition: transform 1s linear;
+  }
+}
+
+.wrapper {
+  transition: transform 1s;
+}
+
+.fade {
+  opacity: 0;
+}
